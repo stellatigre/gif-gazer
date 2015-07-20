@@ -5,9 +5,6 @@ function getQueryParameters(str) {
                 .map(function (n) { return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0];
 }
 
-// modifying CSS values with dat.gui is hard because it won't initialize numerical controls normally,
-// based on element.style.property returning a string representation of the number, so this is here,
-// and it polls on a setInterval to update stuff from dat.gui to the FX.  doesn't seem impact performance much
 var guiDataWrapper = function () {
     for (var i = 0; i <= 2; i++) {
         this[i] = {
@@ -20,13 +17,13 @@ var guiDataWrapper = function () {
             flipY: false,
             filters: {
                 hueRotate: 0,
-                blur: 0,
                 contrast: 1,
                 saturation: 1,
                 brightness: 1,
             }
         }
     }
+    this.droneMode = false;
 };
 
 var opts = new guiDataWrapper();
@@ -49,6 +46,9 @@ function makeDatGUI() {
     var idFields = [];
     var pingPongs = [];
     var opacities = [];
+
+    gui.add(opts, 'droneMode').name('drone mode');
+
     for (var i = 0; i <= 2; i++) {
         var v = gui.addFolder('gif ' + (i+1));
         idFields[i] = v.add(opts[i], 'sourceLink').name("gif link");
@@ -71,7 +71,6 @@ function makeDatGUI() {
         filters.add(opts[i].filters, 'contrast', 0, 10).step(0.1).name("contrast");
         filters.add(opts[i].filters, 'brightness', 0, 10).step(0.1).name("brightness");
         filters.add(opts[i].filters, 'hueRotate', 0, 360).step(1).name("hue");
-        filters.add(opts[i].filters, 'blur', 0, 20).step(1).name("blur");
         filterValues[i] = filters;
     }
     
@@ -112,10 +111,10 @@ function makeDatGUI() {
             });
         });
     });
-    flipX.forEach(function (element, i) {                                                       // these didn't work in 
-        element.onChange(function (value) {                                                     // the above for loop
-            frames[i].classList.toggle("flipX");                                                // but they work great 
-        })                                                                                      // like this, so 
+    flipX.forEach(function (element, i) {                                                       
+        element.onChange(function (value) {                                                     
+            frames[i].classList.toggle("flipX");                                                
+        })                                                                                      
     });
     flipY.forEach(function (element, i) {
         element.onChange(function (value) {
@@ -125,7 +124,7 @@ function makeDatGUI() {
 }
 
 var gifDefaults = ["http://i.imgur.com/y2wd9rK.gif", "http://i.imgur.com/iKXH4E2.gif", "http://i.giphy.com/inteEJBEqO3cY.gif"];
-var params = getQueryParameters(decodeURIComponent(window.location.search));        // get our parameters from the URL
+var params = getQueryParameters(decodeURIComponent(window.location.search));        
 
 if (params.sourceLinks === undefined) {
     var sourceLinks = gifDefaults;            // default to a set i think looks cool if no sourceLinks, will change, probably
