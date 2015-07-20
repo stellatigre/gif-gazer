@@ -1,0 +1,43 @@
+﻿html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+x-gif {
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.75;
+    mix-blend-mode: hard-light;
+}
+
+.flipY {
+    transform: rotateY(180deg);
+}
+
+.flipX {
+    transform: rotateX(180deg);
+}
+
+.flipXY {
+    transform: rotateX(180deg) rotateY(180deg);
+}
+
+/*dat.gui transparency*/
+.dg .cr {
+    opacity: 0.58;
+}
+
+option {
+    background-color: #C2C2C2;
+    opacity: 0.75;
+}
+
+.close-button {
+    opacity: 0.2;
+}
+
+li.title {
+    opacity: 0.5;
+}

@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>GIF Gazer</title>
+    <!--detects support for Web Components and shims if needed-->
+    <script>
+        if ('registerElement' in document
+        && 'createShadowRoot' in HTMLElement.prototype
+        && 'import' in document.createElement('link')
+        && 'content' in document.createElement('template')) {
+        // We're using a browser with native WC support!
+      } else {
+        document.write('<script src="https:\/\/cdnjs.buttflare.com/ajax/libs/polymer/0.3.4/platform.js"><\/script>')
+      }
+    </script>
+    <link rel="import" href="bower_components/x-gif/dist/x-gif.html"/>
+    <link rel="stylesheet" href="gazer.css"/>
+    <script src="bower_components/dat-gui/build/dat.gui.min.js"></script>
+</head>
+<body>
+    <x-gif id="layer-1" src="http://i.imgur.com/iKXH4E2.gif" speed="0.5" fill></x-gif>
+    <x-gif id="layer-2" src="http://i.giphy.com/inteEJBEqO3cY.gif" speed="0.5" fill></x-gif>
+    <x-gif id="layer-3" src="http://i.giphy.com/xCLDDZAYTif7O.gif" speed="0.5" fill></x-gif>
+    <script src="main.js"></script>
+</body>
+</html>
