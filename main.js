@@ -24,7 +24,8 @@ var guiDataWrapper = function () {
                 contrast: 1,
                 saturation: 1,
                 brightness: 1,
-            }
+            },
+            gifLinkBuffer: []
         }
     }
 };
