@@ -32,12 +32,11 @@ var guiDataWrapper = function () {
 var opts = new guiDataWrapper();
 
 function updateLayerFilter(layer, filters) {
-    layer.style.webkitFilter = "hue-rotate(0deg) blur(0px) contrast(1) saturate(1) brightness(1)"
+    layer.style.webkitFilter = "hue-rotate(0deg) contrast(1) saturate(1) brightness(1)"
         .replace("hue-rotate(0", "hue-rotate(" + filters.hueRotate)
         .replace("brightness(1", "brightness(" + filters.brightness)
         .replace("saturate(1", "saturate(" + filters.saturation)
         .replace("contrast(1", "contrast(" + filters.contrast)
-        .replace("blur(0", "blur(" + filters.blur);
 }
 
 function makeDatGUI() {
