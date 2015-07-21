@@ -2,6 +2,7 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
+    margin: 0px;
 }
 
 x-gif {
@@ -27,6 +28,10 @@ x-gif {
 /*dat.gui transparency*/
 .dg .cr {
     opacity: 0.58;
+}
+
+.dg.main.a {
+    margin-right: 0px;
 }
 
 option {
