@@ -1,20 +1,20 @@
 "use strict";
-var giphyLinks;
 
-giphySearch = function (query) {
+var giphyLinks = [];
+
+function giphySearch(query) {
     
-    xhr = new XMLHttpRequest;
+    var xhr = new XMLHttpRequest();
     xhr.open('GET', 'http://api.giphy.com/v1/gifs/search?q={query}&api_key=dc6zaTOxFJmzC&limit=30'.replace('{query}', query), true);
 
     xhr.onload = function () {
         if (xhr.status >= 200 && xhr.status < 400) {
-            data = JSON.parse(xhr.responseText).data;
+            var data = JSON.parse(xhr.responseText).data;
             data.forEach(function (e, i) {
                 giphyLinks.push('http://i.giphy.com/' + e.id + '.gif');
-            });
-            console.log(data);
+            }); 
         } else {
-            console.log('reached giphy, but API returned an error');
+            console.log('giphy returned an error');
         }
     };
 
@@ -25,8 +25,24 @@ giphySearch = function (query) {
     xhr.send();
 }
 
-function pushToLayerBuffers() {
-    for (var i = 0; i <= giphyLinks.length / 10; i++) {
-
+// 30 query results, 3 layers, 10 per layer
+function pushToLayerBuffers(links) {
+    for (var i = 0; i <= 10 ; i++) {
+        if (links.length > 0) {
+            for (var n = 0; n <= 2; n++) {
+                opts[n].gifLinkBuffer.push(links.pop());
+            }
+        }
     }
+}
+
+function setGIF(layerIndex, src) {
+    frames[layerIndex].setAttribute('src', src);
+}
+
+function setNewLinkBuffers(query) {
+    giphySearch(query);
+    setTimeout(function () {
+        pushToLayerBuffers(giphyLinks);
+    }, 1000)
 }
