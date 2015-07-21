@@ -19,7 +19,8 @@ var guiDataWrapper = function () {
             gifLinkBuffer: []
         }
     }
-    this.droneMode = false
+    this.droneMode = false;
+    this.searchQuery = '';
 };
 
 // everything syncs to this object's values, basically
@@ -45,6 +46,7 @@ function makeDatGUI() {
     var opacities = [];
 
     var droneMode = gui.add(opts, 'droneMode').name('drone mode');
+    var searchQuery = gui.add(opts, 'searchQuery').name('search query');
 
     for (var i = 0; i <= 2; i++) {
         var v = gui.addFolder('gif ' + (i+1));
