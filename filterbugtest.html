@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>x-gif filter bug test</title>
+    <link rel="import" href="bower_components/x-gif/dist/x-gif.html"/>
+    <style>
+        html, body{
+            width:100%;
+            height:100%;
+            overflow: hidden;
+        }
+    </style>
+    <link rel="stylesheet" href="gazer.css" />
+</head>
+<body style="height:100%">
+    <x-gif src="http://i.imgur.com/iKXH4E2.gif" speed="0.5" ping-pong fill style="-webkit-filter: saturate(5) contrast(2)"></x-gif>
+    <x-gif src="http://i.giphy.com/MK1k2Gu2gfT1u.gif" speed="0.5" ping-pong fill style="-webkit-filter: saturate(2) contrast(2)"></x-gif>
+</body>
+</html>

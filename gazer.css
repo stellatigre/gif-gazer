@@ -2,6 +2,7 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
+    margin: 0px;
 }
 
 x-gif {
@@ -29,6 +30,10 @@ x-gif {
     opacity: 0.58;
 }
 
+.dg.main.a {
+    margin-right: 0px;
+}
+
 option {
     background-color: #C2C2C2;
     opacity: 0.75;
@@ -40,4 +45,11 @@ option {
 
 li.title {
     opacity: 0.5;
+}
+
+/*giphy logo stuff*/
+#drone-mode-logo {
+    background-image: url("assets/giphypower.png");
+    background-repeat: no-repeat;
+    background-position: right 5px bottom 5px;
 }
