@@ -1,13 +1,5 @@
 var gui;
 
-function getQueryParameters(str) {
-    return (str || document.location.search).replace(/(^\?)/, '').split("&")
-                .map(function (n) { return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0];
-}
-
-// modifying CSS values with dat.gui is hard because it won't initialize numerical controls normally,
-// based on element.style.property returning a string representation of the number, so this is here,
-// and it polls on a setInterval to update stuff from dat.gui to the FX.  doesn't seem impact performance much
 var guiDataWrapper = function () {
     for (var i = 0; i <= 2; i++) {
         this[i] = {
@@ -20,7 +12,6 @@ var guiDataWrapper = function () {
             flipY: false,
             filters: {
                 hueRotate: 0,
-                blur: 0,
                 contrast: 1,
                 saturation: 1,
                 brightness: 1,
@@ -28,8 +19,10 @@ var guiDataWrapper = function () {
             gifLinkBuffer: []
         }
     }
+    this.droneMode = false
 };
 
+// everything syncs to this object's values, basically
 var opts = new guiDataWrapper();
 
 function updateLayerFilter(layer, filters) {
@@ -42,14 +35,17 @@ function updateLayerFilter(layer, filters) {
 
 function makeDatGUI() {
     gui = new dat.GUI();
-    var flipX = [];                             // arrays so we can establish seperate event handlers
-    var flipY = [];                             // for the flip X and flip Y controls
+    var flipX = [];                             
+    var flipY = [];                             
     var blendSwitches = [];
     var playSpeeds = [];
     var filterValues = [];
     var idFields = [];
     var pingPongs = [];
     var opacities = [];
+
+    var droneMode = gui.add(opts, 'droneMode').name('drone mode');
+
     for (var i = 0; i <= 2; i++) {
         var v = gui.addFolder('gif ' + (i+1));
         idFields[i] = v.add(opts[i], 'sourceLink').name("gif link");
@@ -72,7 +68,6 @@ function makeDatGUI() {
         filters.add(opts[i].filters, 'contrast', 0, 10).step(0.1).name("contrast");
         filters.add(opts[i].filters, 'brightness', 0, 10).step(0.1).name("brightness");
         filters.add(opts[i].filters, 'hueRotate', 0, 360).step(1).name("hue");
-        filters.add(opts[i].filters, 'blur', 0, 20).step(1).name("blur");
         filterValues[i] = filters;
     }
     
@@ -125,6 +120,11 @@ function makeDatGUI() {
     })
 }
 
+function getQueryParameters(str) {
+    return (str || document.location.search).replace(/(^\?)/, '').split("&")
+                .map(function (n) { return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0];
+}
+
 var gifDefaults = ["http://i.imgur.com/y2wd9rK.gif", "http://i.imgur.com/iKXH4E2.gif", "http://i.giphy.com/inteEJBEqO3cY.gif"];
 var params = getQueryParameters(decodeURIComponent(window.location.search));        // get our parameters from the URL
 
@@ -141,3 +141,7 @@ frames.forEach(function (element, i) {
 });
 
 makeDatGUI();
+
+// ID for the drone mode tag so we can add the giphy image
+document.querySelector(".property-name").setAttribute('id', 'drone-mode');
+document.querySelector("#drone-mode + div").setAttribute('id', 'drone-mode-logo');

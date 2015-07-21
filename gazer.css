@@ -41,3 +41,10 @@ option {
 li.title {
     opacity: 0.5;
 }
+
+/*giphy logo stuff*/
+#drone-mode-logo {
+    background-image: url("assets/giphypower.png");
+    background-repeat: no-repeat;
+    background-position: right 5px bottom 5px;
+}
