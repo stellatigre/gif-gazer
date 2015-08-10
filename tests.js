@@ -58,37 +58,37 @@ describe('dat.gui interface', () => {
 				// .__controllers[0] is saturation
 				gui.__folders["gif " + (n+1)].__folders.filters.__controllers[0].setValue(4)
 				assert.strictEqual("4", frames[n].style.webkitFilter.match("saturate\\(([0-9])\\)")[1])
-			}
+            }
 		});
     });  
 	
 	describe('contrast slider', () => {
-		it('should change the contrast of its assigned layer', () => {
+        it('should change the contrast of its assigned layer', () => {
 			for (var n=0; n <= 2; n++) {
 				// .__controllers[1] is contrast
 				gui.__folders["gif " + (n+1)].__folders.filters.__controllers[1].setValue(2)
 				assert.strictEqual("2", frames[n].style.webkitFilter.match("contrast\\(([0-9])\\)")[1])
-			}
+            }
 		});
     });
 	
 	describe('brightness slider', () => {
-		it('should change the brightness of its assigned layer', () => {
-			for (var n=0; n <= 2; n++) {
-				// .__controllers[2] is brightness
-				gui.__folders["gif " + (n+1)].__folders.filters.__controllers[2].setValue(0.5)
-				assert.strictEqual("0.5", frames[n].style.webkitFilter.match("brightness\\(([0-9]\\.[0-9])")[1])
-			}
+        it('should change the brightness of its assigned layer', () => {
+            for (var n=0; n <= 2; n++) {
+                // .__controllers[2] is brightness
+                gui.__folders["gif " + (n+1)].__folders.filters.__controllers[2].setValue(0.5)
+                assert.strictEqual("0.5", frames[n].style.webkitFilter.match("brightness\\(([0-9]\\.[0-9])")[1])
+            }
 		});
     });
 	
 	describe('hue slider', () => {
-		it('should change the hue rotation of its assigned layer', () => {
-			for (var n=0; n <= 2; n++) {
-				// .__controllers[3] is hueRotate
-				gui.__folders["gif " + (n+1)].__folders.filters.__controllers[3].setValue(90)
-				assert.strictEqual("90", frames[n].style.webkitFilter.match("hue-rotate\\(([0-9]{2})")[1])
-			}
+        it('should change the hue rotation of its assigned layer', () => {
+            for (var n=0; n <= 2; n++) 
+                // .__controllers[3] is hueRotate
+                gui.__folders["gif " + (n+1)].__folders.filters.__controllers[3].setValue(90)
+                assert.strictEqual("90", frames[n].style.webkitFilter.match("hue-rotate\\(([0-9]{2})")[1])
+            }
 		});
     });
 	
