@@ -4,26 +4,20 @@
 <head>
     <meta charset="utf-8" />
     <title>GIF Gazer</title>
-    <!--detects support for Web Components and shims if needed-->
-    <script>
-        if ('registerElement' in document
-        && 'createShadowRoot' in HTMLElement.prototype
-        && 'import' in document.createElement('link')
-        && 'content' in document.createElement('template')) {
-        // We're using a browser with native WC support!
-      } else {
-        document.write('<script src="https:\/\/cdnjs.buttflare.com/ajax/libs/polymer/0.3.4/platform.js"><\/script>')
-      }
-    </script>
     <link rel="import" href="bower_components/x-gif/dist/x-gif.html"/>
     <link rel="stylesheet" href="gazer.css"/>
+	<link rel="stylesheet" href="css/mocha.css"></link>
     <script src="bower_components/dat-gui/build/dat.gui.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/chai/3.2.0/chai.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.2.5/mocha.js" type="text/javascript"></script>
 </head>
 <body>
     <x-gif id="layer-1" src="http://i.imgur.com/iKXH4E2.gif" speed="0.5" fill></x-gif>
     <x-gif id="layer-2" src="http://i.giphy.com/inteEJBEqO3cY.gif" speed="0.5" fill></x-gif>
     <x-gif id="layer-3" src="http://i.giphy.com/xCLDDZAYTif7O.gif" speed="0.5" fill></x-gif>
+	<div id="mocha"></div>
     <script src="main.js"></script>
     <script src="giphy_integration.js"></script>
+	<script src="tests.js"></script>
 </body>
 </html>

@@ -21,33 +21,40 @@ var guiDataWrapper = function () {
     }
     this.droneMode = false;
     this.searchQuery = '';
+    this.droneSpeed = 2;
 };
 
 // everything syncs to this object's values, basically
 var opts = new guiDataWrapper();
 
 function updateLayerFilter(layer, filters) {
-    layer.style.webkitFilter = "hue-rotate(0deg) contrast(1) saturate(1) brightness(1)"
-        .replace("hue-rotate(0", "hue-rotate(" + filters.hueRotate)
-        .replace("brightness(1", "brightness(" + filters.brightness)
-        .replace("saturate(1", "saturate(" + filters.saturation)
-        .replace("contrast(1", "contrast(" + filters.contrast)
+    layer.style.webkitFilter = 
+        `hue-rotate(${filters.hueRotate}deg) ` +
+		`brightness(${filters.brightness}) ` +
+	    `saturate(${filters.saturation}) ` + 
+		`contrast(${filters.contrast})` 
 }
 
 function makeDatGUI() {
     gui = new dat.GUI();
-    var flipX = [];                             
-    var flipY = [];                             
-    var blendSwitches = [];
-    var playSpeeds = [];
-    var filterValues = [];
-    var idFields = [];
-    var pingPongs = [];
-    var opacities = [];
+	
+    var flipX = [],                             
+		flipY = [],                             
+		blendSwitches = [],
+		playSpeeds = [],
+		filterValues = [],
+		idFields = [],
+		pingPongs = [],
+		opacities = [];
 
-    var droneMode = gui.add(opts, 'droneMode').name('drone mode');
-    var searchQuery = gui.add(opts, 'searchQuery').name('search query');
+    // giphy integration
+    var droneMode = gui.addFolder('drone mode')
+    var droneEnabled = droneMode.add(opts, 'droneMode', false).name('enabled');
+    var searchQuery = droneMode.add(opts, 'searchQuery').name('search query');
+    var switchSpeed = droneMode.add(opts, 'droneSpeed', 0.5, 10).step(0.5).name('speed');
+    droneMode.open();
 
+    // create controls for all 3 GIF layers
     for (var i = 0; i <= 2; i++) {
         var v = gui.addFolder('gif ' + (i+1));
         idFields[i] = v.add(opts[i], 'sourceLink').name("gif link");
@@ -72,29 +79,29 @@ function makeDatGUI() {
         filters.add(opts[i].filters, 'hueRotate', 0, 360).step(1).name("hue");
         filterValues[i] = filters;
     }
-    
-    idFields.forEach(function (element, i) {                                                    // these events handle 
-        element.onFinishChange(function (value) {                                               // live gif loading
+	// next we set up the event handlers for dat.gui change events
+    for (var i=0; i < 2; i ++){
+		idFields[i].onFinishChange((value) => {                                               // live gif loading
             frames[i].setAttribute('src', value);
-        })
-    })
-    opacities.forEach(function (element, i) {
-        element.onChange(function (value) {
-            frames[i].style.opacity = value;
-        })
-    });
-    blendSwitches.forEach(function (element, i) {
-        element.onChange(function (value) {
+        });
+	}
+	blendSwitches.forEach((element, i) => {
+        element.onChange((value) => {
             frames[i].style.mixBlendMode = value;
         })
     });
-    playSpeeds.forEach(function (element, i) {
-        element.onChange(function (value) {
+	opacities.forEach((element, i) => {
+        element.onChange((value) => {
+            frames[i].style.opacity = value;
+        })
+    });
+	playSpeeds.forEach((element, i) => {
+        element.onChange((value) => {
             frames[i].setAttribute('speed', opts[i].playSpeed.toString());
         })
     });
-    pingPongs.forEach(function (element, i) {
-        element.onChange(function (value) {
+	pingPongs.forEach((element, i) => {
+        element.onChange((value) => {
             if (value === true) {
                 frames[i].setAttribute('ping-pong', opts[i].pingPong);
             } 
@@ -103,23 +110,29 @@ function makeDatGUI() {
             }
         })
     });
-    filterValues.forEach(function (element, i) {
-        element.__controllers.forEach(function (controller, n) {
-            controller.onChange(function (value) {
+	filterValues.forEach((element, i) => {
+        element.__controllers.forEach((controller, n) => {
+            controller.onChange((value) => {
                 updateLayerFilter(frames[i], opts[i].filters)
             });
         });
     });
-    flipX.forEach(function (element, i) {                                                       
-        element.onChange(function (value) {                                                     
+	flipX.forEach((element, i) => {                                                       
+        element.onChange((value) => {                                                     
             frames[i].classList.toggle("flipX");                                                
         })                                                                                      
     });
-    flipY.forEach(function (element, i) {
-        element.onChange(function (value) {
+    flipY.forEach((element, i) => {
+        element.onChange((value) => {
             frames[i].classList.toggle("flipY");
         })
     })
+}
+
+function checkFlipStatus(frame){
+    if (frame.classList == ["flipX", "flipY"]) {
+        frame.classList = ["flipXY"];
+    }
 }
 
 function getQueryParameters(str) {
@@ -131,19 +144,18 @@ var gifDefaults = ["http://i.imgur.com/y2wd9rK.gif", "http://i.imgur.com/iKXH4E2
 var params = getQueryParameters(decodeURIComponent(window.location.search));        
 
 if (params.sourceLinks === undefined) {
-    var sourceLinks = gifDefaults;            // default to a set i think looks cool if no sourceLinks, will change, probably
+    var sourceLinks = gifDefaults;            
 } else {
     var sourceLinks = params.sourceLinks.split(",");
 }
 
 var frames = Array.prototype.slice.call(document.querySelectorAll('x-gif'));
 
-frames.forEach(function (element, i) {
+frames.forEach((element, i) => {
     opts[i].sourceLink = sourceLinks[i];
 });
 
+// fire it up
 makeDatGUI();
 
-// ID for the drone mode tag so we can add the giphy image
-document.querySelector(".property-name").setAttribute('id', 'drone-mode');
-document.querySelector("#drone-mode + div").setAttribute('id', 'drone-mode-logo');
+

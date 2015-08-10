@@ -27,7 +27,11 @@ x-gif {
 
 /*dat.gui transparency*/
 .dg .cr {
-    opacity: 0.58;
+    opacity: 0.50;
+}
+
+.dg .cr:hover {
+    opacity: 0.666;
 }
 
 .dg.main.a {
@@ -47,9 +51,17 @@ li.title {
     opacity: 0.5;
 }
 
+.close-button:hover {
+    opacity: 0.69 !important;
+}
+
+.dg.main .close-button {
+    opacity: 0.69 important;
+}
+
 /*giphy logo stuff*/
 #drone-mode-logo {
     background-image: url("assets/giphypower.png");
     background-repeat: no-repeat;
-    background-position: right 5px bottom 5px;
+    background-position: right 5px bottom 0px;
 }

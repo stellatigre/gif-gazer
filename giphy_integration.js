@@ -27,7 +27,8 @@ function giphySearch(query) {
 
 // 30 query results, 3 layers, 10 per layer
 function pushToLayerBuffers(links) {
-    for (var i = 0; i <= 10 ; i++) {
+    var originalLength = links.length;
+    for (var i = 0; i <= originalLength ; i++) {
         if (links.length > 0) {
             for (var n = 0; n <= 2; n++) {
                 opts[n].gifLinkBuffer.push(links.pop());
@@ -44,5 +45,9 @@ function setNewLinkBuffers(query) {
     giphySearch(query);
     setTimeout(function () {
         pushToLayerBuffers(giphyLinks);
-    }, 1000)
+    }, 2000)
 }
+
+// ID for the drone mode tag so we can add the giphy image
+document.querySelector("li.folder .title").setAttribute('id', 'drone-mode-logo');
+//document.querySelector("#drone-mode + div").setAttribute('id', 'drone-mode-logo');
