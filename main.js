@@ -30,9 +30,9 @@ var opts = new guiDataWrapper();
 function updateLayerFilter(layer, filters) {
     layer.style.webkitFilter = 
         `hue-rotate(${filters.hueRotate}deg) ` +
-		`brightness(${filters.brightness}) ` +
-	    `saturate(${filters.saturation}) ` + 
-		`contrast(${filters.contrast})` 
+        `brightness(${filters.brightness}) ` +
+        `saturate(${filters.saturation}) ` + 
+        `contrast(${filters.contrast})` 
 }
 
 function makeDatGUI() {
