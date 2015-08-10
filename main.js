@@ -80,27 +80,27 @@ function makeDatGUI() {
         filterValues[i] = filters;
     }
 	// next we set up the event handlers for dat.gui change events
-    for (var i=0; i < 2; i ++){
-		idFields[i].onFinishChange((value) => {                                               // live gif loading
+	idFields.forEach((element, i) => {
+	    element.onFinishChange((value) => {                                               // live gif loading
             frames[i].setAttribute('src', value);
         });
-	}
-	blendSwitches.forEach((element, i) => {
+	})
+    blendSwitches.forEach((element, i) => {
         element.onChange((value) => {
             frames[i].style.mixBlendMode = value;
         })
     });
-	opacities.forEach((element, i) => {
+    opacities.forEach((element, i) => {
         element.onChange((value) => {
             frames[i].style.opacity = value;
         })
     });
-	playSpeeds.forEach((element, i) => {
+    playSpeeds.forEach((element, i) => {
         element.onChange((value) => {
             frames[i].setAttribute('speed', opts[i].playSpeed.toString());
         })
     });
-	pingPongs.forEach((element, i) => {
+    pingPongs.forEach((element, i) => {
         element.onChange((value) => {
             if (value === true) {
                 frames[i].setAttribute('ping-pong', opts[i].pingPong);
@@ -110,14 +110,14 @@ function makeDatGUI() {
             }
         })
     });
-	filterValues.forEach((element, i) => {
+    filterValues.forEach((element, i) => {
         element.__controllers.forEach((controller, n) => {
             controller.onChange((value) => {
                 updateLayerFilter(frames[i], opts[i].filters)
             });
         });
     });
-	flipX.forEach((element, i) => {                                                       
+    flipX.forEach((element, i) => {                                                       
         element.onChange((value) => {                                                     
             frames[i].classList.toggle("flipX");                                                
         })                                                                                      
