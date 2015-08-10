@@ -6,10 +6,10 @@ describe('dat.gui interface', () => {
   
   describe('opacity slider', () => {
     it('should change the play speed of its assigned layer', () => {
-		for (var n=0; n <= 2; n++) {
-			// .__controllers[1] is opacity
-			gui.__folders["gif " + (n+1)].__controllers[1].setValue(1);
-			assert.equal(1, frames[n].style.opacity)
+        for (var n=0; n <= 2; n++) {
+            // .__controllers[1] is opacity
+            gui.__folders["gif " + (n+1)].__controllers[1].setValue(1);
+            assert.equal(1, frames[n].style.opacity)
 		}
     });
   });
