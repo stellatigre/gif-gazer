@@ -11,18 +11,7 @@ x-gif {
     height: 100%;
     opacity: 0.75;
     mix-blend-mode: hard-light;
-}
-
-.flipY {
-    transform: rotateY(180deg);
-}
-
-.flipX {
-    transform: rotateX(180deg);
-}
-
-.flipXY {
-    transform: rotateX(180deg) rotateY(180deg);
+    transform: rotate3d(0, 0, 0, 180deg);
 }
 
 /*dat.gui transparency*/

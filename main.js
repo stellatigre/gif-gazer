@@ -8,8 +8,7 @@ var guiDataWrapper = function () {
             blendMode: "hard-light",
             playSpeed: 0.5,
             pingPong: false,
-            flipX: false,
-            flipY: false,
+            flipMode: "",
             filters: {
                 hueRotate: 0,
                 contrast: 1,
@@ -28,18 +27,17 @@ var guiDataWrapper = function () {
 var opts = new guiDataWrapper();
 
 function updateLayerFilter(layer, filters) {
-    layer.style.webkitFilter = 
+    layer.style.webkitFilter =
         `hue-rotate(${filters.hueRotate}deg) ` +
         `brightness(${filters.brightness}) ` +
-        `saturate(${filters.saturation}) ` + 
-        `contrast(${filters.contrast})` 
+        `saturate(${filters.saturation}) ` +
+        `contrast(${filters.contrast})`
 }
 
 function makeDatGUI() {
     gui = new dat.GUI();
-	
-    var flipX = [],                             
-		flipY = [],                             
+
+    var flipModes = [],
 		blendSwitches = [],
 		playSpeeds = [],
 		filterValues = [],
@@ -68,20 +66,19 @@ function makeDatGUI() {
         pingPongs[i] = v.add(opts[i], 'pingPong').name("ping-pong");
         v.open();
 
-        var flipModes = v.addFolder('flip mode');                                               // all transform effects go here
-        flipX[i] = flipModes.add(opts[i], 'flipX').name("vertical");
-        flipY[i] = flipModes.add(opts[i], 'flipY').name("horizontal");
+        flipModes[i] = v.add(opts[i], 'flipMode', ['', 'X', 'Y', 'Z']).name('flip mode');
 
-        var filters = v.addFolder('filters');                                                   // filters all go under this
+        var filters = v.addFolder('filters');
         filters.add(opts[i].filters, 'saturation', 0, 10).step(0.1).name("saturation");
         filters.add(opts[i].filters, 'contrast', 0, 10).step(0.1).name("contrast");
         filters.add(opts[i].filters, 'brightness', 0, 10).step(0.1).name("brightness");
         filters.add(opts[i].filters, 'hueRotate', 0, 360).step(1).name("hue");
         filterValues[i] = filters;
     }
-	// next we set up the event handlers for dat.gui change events
+
+    // next we set up the event handlers for dat.gui change events
 	idFields.forEach((element, i) => {
-	    element.onFinishChange((value) => {                                               // live gif loading
+	    element.onFinishChange((value) => {
             frames[i].setAttribute('src', value);
         });
 	})
@@ -104,7 +101,7 @@ function makeDatGUI() {
         element.onChange((value) => {
             if (value === true) {
                 frames[i].setAttribute('ping-pong', opts[i].pingPong);
-            } 
+            }
             else if (value === false) {
                 frames[i].removeAttribute('ping-pong');
             }
@@ -117,23 +114,21 @@ function makeDatGUI() {
             });
         });
     });
-    flipX.forEach((element, i) => {                                                       
-        element.onChange((value) => {                                                     
-            frames[i].classList.toggle("flipX");                                                
-        })                                                                                      
-    });
-    flipY.forEach((element, i) => {
+
+    var flipEnum = {
+        "" : "rotate3d(0, 0, 0, 180deg)",
+        "X" : "rotate3d(1, 0, 0, 180deg)",
+        "Y" : "rotate3d(0, 1, 0, 180deg)",
+        "Z" : "rotate3d(0, 0, 1, 180deg)"
+    }
+    flipModes.forEach((element, i) => {
         element.onChange((value) => {
-            frames[i].classList.toggle("flipY");
-        })
-    })
+            frames[i].style.transform = flipEnum[value];
+        });
+    });
 }
 
-function checkFlipStatus(frame){
-    if (frame.classList == ["flipX", "flipY"]) {
-        frame.classList = ["flipXY"];
-    }
-}
+
 
 function getQueryParameters(str) {
     return (str || document.location.search).replace(/(^\?)/, '').split("&")
@@ -141,10 +136,10 @@ function getQueryParameters(str) {
 }
 
 var gifDefaults = ["http://i.imgur.com/y2wd9rK.gif", "http://i.imgur.com/iKXH4E2.gif", "http://i.giphy.com/inteEJBEqO3cY.gif"];
-var params = getQueryParameters(decodeURIComponent(window.location.search));        
+var params = getQueryParameters(decodeURIComponent(window.location.search));
 
 if (params.sourceLinks === undefined) {
-    var sourceLinks = gifDefaults;            
+    var sourceLinks = gifDefaults;
 } else {
     var sourceLinks = params.sourceLinks.split(",");
 }
@@ -157,5 +152,3 @@ frames.forEach((element, i) => {
 
 // fire it up
 makeDatGUI();
-
-

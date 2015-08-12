@@ -3,7 +3,7 @@ var assert = chai.assert;
 mocha.setup('bdd');
 
 describe('dat.gui interface', () => {
-  
+
   describe('opacity slider', () => {
     it('should change the play speed of its assigned layer', () => {
         for (var n=0; n <= 2; n++) {
@@ -13,7 +13,7 @@ describe('dat.gui interface', () => {
         }
     });
   });
-  
+
   describe('blend mode switch', () => {
     it('should change the blend mode of its assigned layer', () => {
 	    for (var n=0; n <= 2; n++) {
@@ -23,7 +23,7 @@ describe('dat.gui interface', () => {
         }
     });
   });
-  
+
   describe('play speed slider', () => {
     it('should change the play speed of its assigned layer', () => {
         for (var n=0; n <= 2; n++) {
@@ -33,7 +33,7 @@ describe('dat.gui interface', () => {
         }
     });
   });
-  
+
   describe('ping-pong switch', () => {
     it('should change the playback mode of the layer to ping-pong when true', () => {
 		for (var n=0; n <= 2; n++) {
@@ -41,7 +41,7 @@ describe('dat.gui interface', () => {
 			gui.__folders["gif " + (n+1)].__controllers[4].setValue(true);
 			assert.equal("true", frames[n].getAttribute("ping-pong"))
 		}
-    });	
+    });
 	it('should change the playback mode of the layer to forward when false', () => {
 		for (var n=0; n <= 2; n++) {
 			gui.__folders["gif " + (n+1)].__controllers[4].setValue(false);
@@ -49,9 +49,9 @@ describe('dat.gui interface', () => {
 		}
     });
   });
-  
+
   describe("filters", () => {
-	
+
     describe('saturation slider', () => {
         it('should change the saturation of its assigned layer', () => {
             for (var n=0; n <= 2; n++) {
@@ -60,8 +60,8 @@ describe('dat.gui interface', () => {
                 assert.strictEqual("4", frames[n].style.webkitFilter.match("saturate\\(([0-9])\\)")[1])
             }
 		});
-    });  
-	
+    });
+
     describe('contrast slider', () => {
         it('should change the contrast of its assigned layer', () => {
             for (var n=0; n <= 2; n++) {
@@ -71,7 +71,7 @@ describe('dat.gui interface', () => {
             }
 		});
     });
-	
+
      describe('brightness slider', () => {
         it('should change the brightness of its assigned layer', () => {
             for (var n=0; n <= 2; n++) {
@@ -81,17 +81,33 @@ describe('dat.gui interface', () => {
             }
         });
     });
-	
+
     describe('hue slider', () => {
         it('should change the hue rotation of its assigned layer', () => {
-            for (var n=0; n <= 2; n++) 
+            for (var n=0; n <= 2; n++) {
                 // .__controllers[3] is hueRotate
                 gui.__folders["gif " + (n+1)].__folders.filters.__controllers[3].setValue(90)
                 assert.strictEqual("90", frames[n].style.webkitFilter.match("hue-rotate\\(([0-9]{2})")[1])
             }
         });
     });
-	
+
+    describe('flip mode selector', () => {
+        it('should change the rotation mode / transform of its assigned layer', () => {
+            for (var n=0; n <= 2; n++) {
+                flipSwitch = gui.__folders["gif " + (n+1)].__controllers[5];
+
+                flipSwitch.setValue("X")
+                assert.equal("rotate3d(1, 0, 0, 180deg)", frames[n].style.transform)
+                flipSwitch.setValue("Y")
+                assert.equal("rotate3d(0, 1, 0, 180deg)", frames[n].style.transform)
+                flipSwitch.setValue("Z")
+                assert.equal("rotate3d(0, 0, 1, 180deg)", frames[n].style.transform)
+                flipSwitch.setValue("")
+                assert.equal("rotate3d(0, 0, 0, 180deg)", frames[n].style.transform)
+            }
+        });
+    });
+
   });
-    
 });

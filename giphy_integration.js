@@ -3,24 +3,22 @@
 var giphyLinks = [];
 
 function giphySearch(query) {
-    
+
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'http://api.giphy.com/v1/gifs/search?q={query}&api_key=dc6zaTOxFJmzC&limit=30'.replace('{query}', query), true);
 
-    xhr.onload = function () {
+    xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 400) {
             var data = JSON.parse(xhr.responseText).data;
-            data.forEach(function (e, i) {
+            data.forEach((e, i) => {
                 giphyLinks.push('http://i.giphy.com/' + e.id + '.gif');
-            }); 
+            });
         } else {
             console.log('giphy returned an error');
         }
     };
 
-    xhr.onerror = function () {
-        console.log('connection borked');
-    };
+    xhr.onerror = () => { console.log('connection borked'); }
 
     xhr.send();
 }
@@ -43,7 +41,7 @@ function setGIF(layerIndex, src) {
 
 function setNewLinkBuffers(query) {
     giphySearch(query);
-    setTimeout(function () {
+    setTimeout(() => {
         pushToLayerBuffers(giphyLinks);
     }, 2000)
 }
