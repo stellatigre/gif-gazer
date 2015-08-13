@@ -1,49 +1,33 @@
-"use strict";
+'use strict';
 
-var giphyLinks = [];
+function loadGiphySearchResults(query) {
 
-function giphySearch(query) {
-
+    var key = 'dc6zaTOxFJmzC'
+    var api = 'http://api.giphy.com'
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://api.giphy.com/v1/gifs/search?q={query}&api_key=dc6zaTOxFJmzC&limit=30'.replace('{query}', query), true);
+    xhr.open('GET', `${api}/v1/gifs/search?q=${query}&api_key=${key}&limit=30`, true);
 
     xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 400) {
             var data = JSON.parse(xhr.responseText).data;
-            data.forEach((e, i) => {
-                giphyLinks.push('http://i.giphy.com/' + e.id + '.gif');
-            });
+            assignLinks(data.map((e, i) => `http://i.giphy.com/${e.id}.gif`));
         } else {
             console.log('giphy returned an error');
         }
     };
 
     xhr.onerror = () => { console.log('connection borked'); }
-
     xhr.send();
 }
 
 // 30 query results, 3 layers, 10 per layer
-function pushToLayerBuffers(links) {
+function assignLinks(links) {
     var originalLength = links.length;
-    for (var i = 0; i <= originalLength ; i++) {
-        if (links.length > 0) {
-            for (var n = 0; n <= 2; n++) {
-                opts[n].gifLinkBuffer.push(links.pop());
-            }
+    for (var i = 0; i < originalLength / 3 ; i++) {
+        for (var n = 0; n <= 2; n++) {
+            opts[n].gifLinkBuffer.push(links.pop());
         }
     }
-}
-
-function setGIF(layerIndex, src) {
-    frames[layerIndex].setAttribute('src', src);
-}
-
-function setNewLinkBuffers(query) {
-    giphySearch(query);
-    setTimeout(() => {
-        pushToLayerBuffers(giphyLinks);
-    }, 2000)
 }
 
 // ID for the drone mode tag so we can add the giphy image

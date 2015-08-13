@@ -1,8 +1,25 @@
-// the var "gui" is established in main.js
+'use strict';
+
 var assert = chai.assert;
 mocha.setup('bdd');
 
 describe('dat.gui interface', () => {
+
+    describe('assignLinks function', () => {
+      it('should put 10 GIF links in each layer\'s gifLinkBuffer, given 30 links', () => {
+
+          // using fake, generated links so i can test this function alone
+          assignLinks(Array.from(new Array(30), () => (Math.random()*1e20).toString(36) + ".gif"));
+
+          for (var n in frames) {
+              let linkBuffer = opts[n].gifLinkBuffer;
+              assert.strictEqual(10, linkBuffer.length);
+              for (var i in linkBuffer) {
+                  assert.equal(linkBuffer[i].match(/\.gif/), ".gif");
+              }
+          }
+      });
+    });
 
   describe('opacity slider', () => {
     it('should change the play speed of its assigned layer', () => {
@@ -93,7 +110,8 @@ describe('dat.gui interface', () => {
     });
 
     describe('flip mode selector', () => {
-        it('should change the rotation mode / transform of its assigned layer', () => {
+        it('should change the rotation mode / transform of its assigned layer, ' +
+           'according the the predetermined values in flipEnum', () => {
             for (var n=0; n <= 2; n++) {
                 flipSwitch = gui.__folders["gif " + (n+1)].__controllers[5];
 

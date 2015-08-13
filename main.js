@@ -1,12 +1,14 @@
+'use strict';
+
 var gui;
 
 var guiDataWrapper = function () {
     for (var i = 0; i <= 2; i++) {
         this[i] = {
-            sourceLink: "",
+            url: "",
             opacity: 0.75,
             blendMode: "hard-light",
-            playSpeed: 0.5,
+            speed: 0.5,
             pingPong: false,
             flipMode: "",
             filters: {
@@ -18,15 +20,15 @@ var guiDataWrapper = function () {
             gifLinkBuffer: []
         }
     }
-    this.droneMode = false;
+    this.tvMode = false;
     this.searchQuery = '';
-    this.droneSpeed = 2;
+    this.tvSpeed = 2;
 };
 
 // everything syncs to this object's values, basically
 var opts = new guiDataWrapper();
 
-function updateLayerFilter(layer, filters) {
+function updateFilter(layer, filters) {
     layer.style.webkitFilter =
         `hue-rotate(${filters.hueRotate}deg) ` +
         `brightness(${filters.brightness}) ` +
@@ -39,30 +41,30 @@ function makeDatGUI() {
 
     var flipModes = [],
 		blendSwitches = [],
-		playSpeeds = [],
+		speeds = [],
 		filterValues = [],
 		idFields = [],
 		pingPongs = [],
 		opacities = [];
 
     // giphy integration
-    var droneMode = gui.addFolder('drone mode')
-    var droneEnabled = droneMode.add(opts, 'droneMode', false).name('enabled');
-    var searchQuery = droneMode.add(opts, 'searchQuery').name('search query');
-    var switchSpeed = droneMode.add(opts, 'droneSpeed', 0.5, 10).step(0.5).name('speed');
-    droneMode.open();
+    var tvMode = gui.addFolder('tv mode')
+    var tvEnabled = tvMode.add(opts, 'tvMode', false).name('enabled');
+    var searchQuery = tvMode.add(opts, 'searchQuery').name('search query');
+    var switchSpeed = tvMode.add(opts, 'tvSpeed', 0.5, 10).step(0.5).name('speed');
+    tvMode.open();
 
     // create controls for all 3 GIF layers
     for (var i = 0; i <= 2; i++) {
         var v = gui.addFolder('gif ' + (i+1));
-        idFields[i] = v.add(opts[i], 'sourceLink').name("gif link");
+        idFields[i] = v.add(opts[i], 'url').name("gif link");
         opacities[i] = v.add(opts[i], 'opacity', 0, 1).name("opacity");
         blendSwitches[i] = v.add(opts[i], 'blendMode',
             ["screen", "multiply", "soft-light", "hard-light", "hue", "overlay",
              "difference", "luminosity", "color-burn", "color-dodge"]
         ).name("blend mode");
 
-        playSpeeds[i] = v.add(opts[i], 'playSpeed', 0, 5).step(0.1).name("play speed");
+        speeds[i] = v.add(opts[i], 'speed', 0, 5).step(0.1).name("play speed");
         pingPongs[i] = v.add(opts[i], 'pingPong').name("ping-pong");
         v.open();
 
@@ -78,24 +80,16 @@ function makeDatGUI() {
 
     // next we set up the event handlers for dat.gui change events
 	idFields.forEach((element, i) => {
-	    element.onFinishChange((value) => {
-            frames[i].setAttribute('src', value);
-        });
+	    element.onFinishChange((value) => { frames[i].setAttribute('src', value) });
 	})
     blendSwitches.forEach((element, i) => {
-        element.onChange((value) => {
-            frames[i].style.mixBlendMode = value;
-        })
+        element.onChange((value) => { frames[i].style.mixBlendMode = value });
     });
     opacities.forEach((element, i) => {
-        element.onChange((value) => {
-            frames[i].style.opacity = value;
-        })
+        element.onChange((value) => { frames[i].style.opacity = value });
     });
-    playSpeeds.forEach((element, i) => {
-        element.onChange((value) => {
-            frames[i].setAttribute('speed', opts[i].playSpeed.toString());
-        })
+    speeds.forEach((element, i) => {
+        element.onChange((value) => { frames[i].setAttribute('speed', value) });
     });
     pingPongs.forEach((element, i) => {
         element.onChange((value) => {
@@ -109,9 +103,7 @@ function makeDatGUI() {
     });
     filterValues.forEach((element, i) => {
         element.__controllers.forEach((controller, n) => {
-            controller.onChange((value) => {
-                updateLayerFilter(frames[i], opts[i].filters)
-            });
+            controller.onChange((value) => { updateFilter(frames[i], opts[i].filters) });
         });
     });
 
@@ -122,33 +114,30 @@ function makeDatGUI() {
         "Z" : "rotate3d(0, 0, 1, 180deg)"
     }
     flipModes.forEach((element, i) => {
-        element.onChange((value) => {
-            frames[i].style.transform = flipEnum[value];
-        });
+        element.onChange((value) => { frames[i].style.transform = flipEnum[value] });
     });
 }
 
-
-
 function getQueryParameters(str) {
     return (str || document.location.search).replace(/(^\?)/, '').split("&")
-                .map(function (n) { return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0];
+        .map(function (n) { return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0];
 }
 
-var gifDefaults = ["http://i.imgur.com/y2wd9rK.gif", "http://i.imgur.com/iKXH4E2.gif", "http://i.giphy.com/inteEJBEqO3cY.gif"];
+var gifDefaults = ["http://i.imgur.com/y2wd9rK.gif",
+                   "http://i.imgur.com/iKXH4E2.gif",
+                   "http://i.giphy.com/inteEJBEqO3cY.gif"];
+
 var params = getQueryParameters(decodeURIComponent(window.location.search));
 
-if (params.sourceLinks === undefined) {
-    var sourceLinks = gifDefaults;
+if (params.urls === undefined) {
+    var urls = gifDefaults;
 } else {
-    var sourceLinks = params.sourceLinks.split(",");
+    var urls = params.urls.split(",");
 }
 
-var frames = Array.prototype.slice.call(document.querySelectorAll('x-gif'));
+var frames = Array.from(document.querySelectorAll('x-gif'));
 
-frames.forEach((element, i) => {
-    opts[i].sourceLink = sourceLinks[i];
-});
+frames.forEach((_, i) => { opts[i].url = urls[i] });
 
 // fire it up
 makeDatGUI();
