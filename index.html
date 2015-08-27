@@ -12,12 +12,16 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.2.5/mocha.js" type="text/javascript"></script>
 </head>
 <body>
-    <x-gif id="layer-1" src="http://i.imgur.com/iKXH4E2.gif" speed="0.5" fill></x-gif>
-    <x-gif id="layer-2" src="http://i.giphy.com/inteEJBEqO3cY.gif" speed="0.5" fill></x-gif>
-    <x-gif id="layer-3" src="http://i.giphy.com/xCLDDZAYTif7O.gif" speed="0.5" fill></x-gif>
+    <x-gif id="layer-1" speed="0.5" fill></x-gif>
+    <x-gif id="layer-2" speed="0.5" fill></x-gif>
+    <x-gif id="layer-3" speed="0.5" fill></x-gif>
 	<div id="mocha"></div>
     <script src="main.js"></script>
     <script src="giphy_integration.js"></script>
 	<script src="tests.js"></script>
+    <script>
+    // this is just for demo purposes
+    loadGiphySearchResults("water", beginTV);
+    </script>
 </body>
 </html>
