@@ -20,13 +20,17 @@ var guiDataWrapper = function () {
             gifLinkBuffer: []
         }
     }
-    this.tvMode = false;
-    this.searchQuery = '';
-    this.tvSpeed = 2;
 };
 
 // everything syncs to this object's values, basically
 var opts = new guiDataWrapper();
+
+var TV = {
+    speed : 2,
+    query: "",
+    ticker: null,
+    lastSwitchedLayer: null
+}
 
 function updateFilter(layer, filters) {
     layer.style.webkitFilter =
@@ -49,9 +53,8 @@ function makeDatGUI() {
 
     // giphy integration
     var tvMode = gui.addFolder('tv mode')
-    var tvEnabled = tvMode.add(opts, 'tvMode', false).name('enabled');
-    var searchQuery = tvMode.add(opts, 'searchQuery').name('search query');
-    var switchSpeed = tvMode.add(opts, 'tvSpeed', 0.5, 10).step(0.5).name('speed');
+    var searchQuery = tvMode.add(TV, 'query').name('search query');
+    var switchSpeed = tvMode.add(TV, 'speed', 1, 6).step(1).name('speed');
     tvMode.open();
 
     // create controls for all 3 GIF layers
@@ -78,7 +81,10 @@ function makeDatGUI() {
         filterValues[i] = filters;
     }
 
-    // next we set up the event handlers for dat.gui change events
+    // all GUI event handlers go under here
+    // here we assume TV mode is off until a search query is entered
+    searchQuery.onFinishChange((value) => { loadGiphySearchResults(value, beginTV) });
+
 	idFields.forEach((element, i) => {
 	    element.onFinishChange((value) => { frames[i].setAttribute('src', value) });
 	})
@@ -102,8 +108,8 @@ function makeDatGUI() {
         })
     });
     filterValues.forEach((element, i) => {
-        element.__controllers.forEach((controller, n) => {
-            controller.onChange((value) => { updateFilter(frames[i], opts[i].filters) });
+        element.__controllers.forEach((control, _) => {
+            control.onChange((value) => { updateFilter(frames[i], opts[i].filters) });
         });
     });
 
