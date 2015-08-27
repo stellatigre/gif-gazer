@@ -1,6 +1,6 @@
 'use strict';
 
-// obvious SO rip, just a utility function
+// obvious SO rip, i didn't write this function - just a utility
 function shuffle(o){
     for(var j, x, i = o.length; i;
         j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
@@ -43,9 +43,9 @@ function assignLinks(links) {
 
 function beginTV () {
     for (var i in frames) {
-        frames[i].setAttribute('src', opts[i].gifLinkBuffer[0])
+        frames[i].setAttribute('src', opts[i].gifLinkBuffer[0]);
     }
-    TV.ticker = setInterval(() => { switchOneLayer() }, 30000 / TV.speed )
+    setNewSpeedTicker();
     TV.lastSwitchedLayer = 2;
 }
 
@@ -58,11 +58,34 @@ function switchOneLayer () {
 
     // use the next link in the buffer, being careful to wrap around
     var currentIndex = opts[index].gifLinkBuffer.indexOf(currentGIF);
-    if (currentIndex === 14) { currentIndex = -1 }
+
+    // end of the the line, cycle back + shuffle
+    if (currentIndex === 14) {
+        currentIndex = -1;
+        shuffleLinkBuffers();
+    }
     frames[index].setAttribute('src', opts[index].gifLinkBuffer[currentIndex + 1]);
     TV.lastSwitchedLayer += 1;
 }
 
+function setNewSpeedTicker () {
+    TV.ticker = setInterval(() => { switchOneLayer() }, 30000 / TV.speed );
+}
+
+// set new speed after a delay
+function handleSpeedSwitch () {
+    console.log("handling speed switch...");
+    clearInterval(TV.ticker);
+    setTimeout(setNewSpeedTicker, (30000 / TV.speed) - 3000 );
+}
+
+// used to keep the order from becoming predicatable
+function shuffleLinkBuffers () {
+    console.log("shuffling link buffers...");
+    for (var i in opts) {
+        opts[i].gifLinkBuffer = shuffle(opts[i].gifLinkBuffer);
+    }
+}
 // ID for the drone mode tag so we can add the giphy image
 document.querySelector("li.folder .title").setAttribute('id', 'drone-mode-logo');
 //document.querySelector("#drone-mode + div").setAttribute('id', 'drone-mode-logo');

@@ -54,7 +54,7 @@ function makeDatGUI() {
     // giphy integration
     var tvMode = gui.addFolder('tv mode')
     var searchQuery = tvMode.add(TV, 'query').name('search query');
-    var switchSpeed = tvMode.add(TV, 'speed', 1, 6).step(1).name('speed');
+    var tvSpeed = tvMode.add(TV, 'speed', 1, 6).step(1).name('speed');
     tvMode.open();
 
     // create controls for all 3 GIF layers
@@ -84,6 +84,8 @@ function makeDatGUI() {
     // all GUI event handlers go under here
     // here we assume TV mode is off until a search query is entered
     searchQuery.onFinishChange((value) => { loadGiphySearchResults(value, beginTV) });
+
+    tvSpeed.onFinishChange((_) => { handleSpeedSwitch() });
 
 	idFields.forEach((element, i) => {
 	    element.onFinishChange((value) => { frames[i].setAttribute('src', value) });
