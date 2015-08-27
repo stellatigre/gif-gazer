@@ -17,7 +17,9 @@ function loadGiphySearchResults(query, callback) {
     xhr.open('GET', `${api}?q=${query}&api_key=${key}&limit=${queryLimit}`, true);
 
     xhr.onload = () => {
+        //
         if (xhr.status >= 200 && xhr.status < 400) {
+            clearInterval(TV.ticker);
             var data = JSON.parse(xhr.responseText).data;
             assignLinks(data.map((e, _) => `http://i.giphy.com/${e.id}.gif`));
         } else {
@@ -30,7 +32,6 @@ function loadGiphySearchResults(query, callback) {
     xhr.send();
 }
 
-// 30 query results, 3 layers, 10 per layer
 function assignLinks(links) {
     var originalLength = links.length;
     links = shuffle(links);
@@ -56,7 +57,6 @@ function switchOneLayer () {
     var currentGIF = frames[index].getAttribute('src');
     if (TV.lastSwitchedLayer === 2) { TV.lastSwitchedLayer = -1 }
 
-    // use the next link in the buffer, being careful to wrap around
     var currentIndex = opts[index].gifLinkBuffer.indexOf(currentGIF);
 
     // end of the the line, cycle back + shuffle
@@ -69,14 +69,9 @@ function switchOneLayer () {
 }
 
 function setNewSpeedTicker () {
-    TV.ticker = setInterval(() => { switchOneLayer() }, 30000 / TV.speed );
-}
-
-// set new speed after a delay
-function handleSpeedSwitch () {
     console.log("handling speed switch...");
     clearInterval(TV.ticker);
-    setTimeout(setNewSpeedTicker, (30000 / TV.speed) - 3000 );
+    TV.ticker = setInterval(() => { switchOneLayer() }, 30000 / TV.speed );
 }
 
 // used to keep the order from becoming predicatable

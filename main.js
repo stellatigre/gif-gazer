@@ -27,7 +27,7 @@ var opts = new guiDataWrapper();
 
 var TV = {
     speed : 2,
-    query: "water",
+    query: "vaporwave",
     ticker: null,
     lastSwitchedLayer: null
 }
