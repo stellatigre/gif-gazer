@@ -27,7 +27,7 @@ var opts = new guiDataWrapper();
 
 var TV = {
     speed : 2,
-    query: "",
+    query: "water",
     ticker: null,
     lastSwitchedLayer: null
 }
@@ -126,26 +126,8 @@ function makeDatGUI() {
     });
 }
 
-function getQueryParameters(str) {
-    return (str || document.location.search).replace(/(^\?)/, '').split("&")
-        .map(function (n) { return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0];
-}
-
-var gifDefaults = ["http://i.imgur.com/y2wd9rK.gif",
-                   "http://i.imgur.com/iKXH4E2.gif",
-                   "http://i.giphy.com/inteEJBEqO3cY.gif"];
-
-var params = getQueryParameters(decodeURIComponent(window.location.search));
-
-if (params.urls === undefined) {
-    var urls = gifDefaults;
-} else {
-    var urls = params.urls.split(",");
-}
-
+// this line is important, lots of code relies on "frames" and "opts"
 var frames = Array.from(document.querySelectorAll('x-gif'));
-
-frames.forEach((_, i) => { opts[i].url = urls[i] });
 
 // fire it up
 makeDatGUI();
