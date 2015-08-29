@@ -51,8 +51,6 @@ function beginTV () {
 }
 
 function switchOneLayer () {
-    console.log("trying to switch a GIF layer...");
-
     var index = TV.lastSwitchedLayer;
     var currentGIF = frames[index].getAttribute('src');
     if (TV.lastSwitchedLayer === 2) { TV.lastSwitchedLayer = -1 }
@@ -69,14 +67,12 @@ function switchOneLayer () {
 }
 
 function setNewSpeedTicker () {
-    console.log("handling speed switch...");
     clearInterval(TV.ticker);
     TV.ticker = setInterval(() => { switchOneLayer() }, 30000 / TV.speed );
 }
 
 // used to keep the order from becoming predicatable
 function shuffleLinkBuffers () {
-    console.log("shuffling link buffers...");
     for (var i in opts) {
         opts[i].gifLinkBuffer = shuffle(opts[i].gifLinkBuffer);
     }
