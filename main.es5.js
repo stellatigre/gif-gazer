@@ -135,8 +135,7 @@ function makeDatGUI() {
 }
 
 // this line is important, lots of code relies on "frames" and "opts"
-var frames = Array.from(document.querySelectorAll('x-gif'));
+var frames = Array.prototype.slice.call(document.querySelectorAll('x-gif'));
 
 // fire it up
 makeDatGUI();
-
