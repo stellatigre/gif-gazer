@@ -83,7 +83,7 @@ function makeDatGUI() {
     // all GUI event handlers go under here
     searchQuery.onFinishChange((value) => { loadGiphySearchResults(value, beginTV) });
 
-    tvSpeed.onFinishChange(handleSpeedSwitch);
+    tvSpeed.onFinishChange(() => { handleSpeedSwitch() });
 
 	idFields.forEach((element, i) => {
 	    element.onFinishChange((value) => { frames[i].setAttribute('src', value) });
