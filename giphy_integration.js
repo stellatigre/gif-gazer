@@ -10,8 +10,8 @@ function shuffle(o){
 // callback is going to be beginTV , but it's nice to be flexible
 function loadGiphySearchResults(query, callback) {
 
-    var key = 'dc6zaTOxFJmzC'
-    var api = 'http://api.giphy.com/v1/gifs/search'
+    var key = 'a03rnM1f9zO5G';
+    var api = 'http://api.giphy.com/v1/gifs/search';
     var queryLimit = 45;
     var xhr = new XMLHttpRequest();
     xhr.open('GET', `${api}?q=${query}&api_key=${key}&limit=${queryLimit}`, true);
@@ -58,7 +58,7 @@ function switchOneLayer () {
     var currentIndex = opts[index].gifLinkBuffer.indexOf(currentGIF);
 
     // end of the the line, cycle back + shuffle
-    if (currentIndex === 14) {
+    if (currentIndex === 15) {
         currentIndex = -1;
         shuffleLinkBuffers();
     }
