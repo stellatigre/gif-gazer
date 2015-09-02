@@ -34,10 +34,10 @@ var TV = {
 
 function updateFilter(layer, filters) {
     layer.style.webkitFilter =
-        `hue-rotate(${filters.hueRotate}deg) ` +
-        `brightness(${filters.brightness}) ` +
-        `saturate(${filters.saturation}) ` +
-        `contrast(${filters.contrast})`
+        `hue-rotate(${filters.hueRotate}deg)
+         brightness(${filters.brightness})
+         saturate(${filters.saturation})
+         contrast(${filters.contrast})`;
 }
 
 function makeDatGUI() {
@@ -51,8 +51,11 @@ function makeDatGUI() {
 		pingPongs = [],
 		opacities = [];
 
+    var blendModes = ["screen", "multiply", "soft-light", "hard-light", "overlay",
+                      "hue", "difference", "luminosity", "color-burn", "color-dodge"]
+
     // giphy integration
-    var tvMode = gui.addFolder('tv mode')
+    var tvMode = gui.addFolder('tv mode');
     var searchQuery = tvMode.add(TV, 'query').name('search query');
     var tvSpeed = tvMode.add(TV, 'speed', 1, 6).step(1).name('speed');
     tvMode.open();
@@ -62,11 +65,7 @@ function makeDatGUI() {
         var v = gui.addFolder('gif ' + (i+1));
         idFields[i] = v.add(opts[i], 'url').name("gif link");
         opacities[i] = v.add(opts[i], 'opacity', 0, 1).name("opacity");
-        blendSwitches[i] = v.add(opts[i], 'blendMode',
-            ["screen", "multiply", "soft-light", "hard-light", "hue", "overlay",
-             "difference", "luminosity", "color-burn", "color-dodge"]
-        ).name("blend mode");
-
+        blendSwitches[i] = v.add(opts[i], 'blendMode', blendModes).name("blend mode");
         speeds[i] = v.add(opts[i], 'speed', 0, 5).step(0.1).name("play speed");
         pingPongs[i] = v.add(opts[i], 'pingPong').name("ping-pong");
         v.open();
@@ -82,10 +81,9 @@ function makeDatGUI() {
     }
 
     // all GUI event handlers go under here
-    // here we assume TV mode is off until a search query is entered
     searchQuery.onFinishChange((value) => { loadGiphySearchResults(value, beginTV) });
 
-    tvSpeed.onFinishChange((_) => { handleSpeedSwitch() });
+    tvSpeed.onFinishChange(() => { handleSpeedSwitch() });
 
 	idFields.forEach((element, i) => {
 	    element.onFinishChange((value) => { frames[i].setAttribute('src', value) });
@@ -101,10 +99,10 @@ function makeDatGUI() {
     });
     pingPongs.forEach((element, i) => {
         element.onChange((value) => {
-            if (value === true) {
+            if (value) {
                 frames[i].setAttribute('ping-pong', opts[i].pingPong);
             }
-            else if (value === false) {
+            else {
                 frames[i].removeAttribute('ping-pong');
             }
         })
@@ -126,8 +124,9 @@ function makeDatGUI() {
     });
 }
 
-// this line is important, lots of code relies on "frames" and "opts"
-var frames = Array.from(document.querySelectorAll('x-gif'));
+// this line was using Array.from but that didn't work universally :(
+// also it's very important, lots of code assumes this "frames" var
+var frames = Array.prototype.slice.call(document.querySelectorAll('x-gif'));
 
 // fire it up
 makeDatGUI();

@@ -10,8 +10,8 @@ function shuffle(o){
 // callback is going to be beginTV , but it's nice to be flexible
 function loadGiphySearchResults(query, callback) {
 
-    var key = 'dc6zaTOxFJmzC'
-    var api = 'http://api.giphy.com/v1/gifs/search'
+    var key = 'a03rnM1f9zO5G';
+    var api = 'http://api.giphy.com/v1/gifs/search';
     var queryLimit = 45;
     var xhr = new XMLHttpRequest();
     xhr.open('GET', `${api}?q=${query}&api_key=${key}&limit=${queryLimit}`, true);
@@ -51,8 +51,6 @@ function beginTV () {
 }
 
 function switchOneLayer () {
-    console.log("trying to switch a GIF layer...");
-
     var index = TV.lastSwitchedLayer;
     var currentGIF = frames[index].getAttribute('src');
     if (TV.lastSwitchedLayer === 2) { TV.lastSwitchedLayer = -1 }
@@ -60,7 +58,7 @@ function switchOneLayer () {
     var currentIndex = opts[index].gifLinkBuffer.indexOf(currentGIF);
 
     // end of the the line, cycle back + shuffle
-    if (currentIndex === 14) {
+    if (currentIndex === 15) {
         currentIndex = -1;
         shuffleLinkBuffers();
     }
@@ -69,14 +67,12 @@ function switchOneLayer () {
 }
 
 function setNewSpeedTicker () {
-    console.log("handling speed switch...");
     clearInterval(TV.ticker);
     TV.ticker = setInterval(() => { switchOneLayer() }, 30000 / TV.speed );
 }
 
 // used to keep the order from becoming predicatable
 function shuffleLinkBuffers () {
-    console.log("shuffling link buffers...");
     for (var i in opts) {
         opts[i].gifLinkBuffer = shuffle(opts[i].gifLinkBuffer);
     }
